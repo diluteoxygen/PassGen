@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Password Generator</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    form {
+      display: inline-block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Password Generator</h1>
+  <form id="password-form">
+    <label for="length">Password Length:</label><br>
+    <input type="range" id="length" name="length" min="8" max="32" value="8"><br>
+    <input type="checkbox" id="show-password" name="show-password">
+    <label for="show-password">Show Password</label><br>
+    <button type="submit">Generate Password</button>
+  </form>
+  <br>
+  <p id="password"></p>
+  <button id="copy-button">Copy Password</button>
+  <script>
+    const form = document.querySelector('#password-form');
+    const passwordOutput = document.querySelector('#password');
+    const showPasswordCheckbox = document.querySelector('#show-password');
+    const copyButton = document.querySelector('#copy-button');
+
+    const charSets = {
+      symbols: '!@#$%^&*(){}[]=<>/,.',
+      numbers: '0123456789',
+      uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      lowercase: 'abcdefghijklmnopqrstuvwxyz'
+    };
+
+    let password = '';
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const length = formData.get('length');
+      let charSet = charSets.symbols + charSets.numbers + charSets.uppercase + charSets.lowercase;  // Always include all character sets
+
+      password = '';
+      for (let i = 0; i < length; i++) {
+        password += charSet.charAt(Math.floor(Math.random() * charSet.length));
+      }
+
+      updatePasswordDisplay();
+    });
+
+    showPasswordCheckbox.addEventListener('change', event => {
+      updatePasswordDisplay();
+    });
+    copyButton.addEventListener('click', event => {
+  // Create a hidden textarea element and copy the password to it
+  const textarea = document.createElement('textarea');
+  textarea.value = password;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'absolute';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+
+  // Select the text in the textarea
+  textarea.select();
+
+  // Copy the selected text to the clipboard
+  document.execCommand('copy');
+
+  // Remove the textarea element
+  document.body.removeChild(textarea);
+});
+
+    copyButton.addEventListener('click', event => {
+      const textarea = document.createElement('textarea');
+    });
+
+    function updatePasswordDisplay() {
+      if (showPasswordCheckbox.checked) {
+        passwordOutput.textContent = password;
+      } else {
+        passwordOutput.textContent = '*'.repeat(password.length);
+      }
+    }
+  </script>
+</body>
+</html>
