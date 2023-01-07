@@ -1,37 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <title>Password Generator</title>
+  <link rel="stylesheet" href="/path/to/dark-theme.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style>
     body {
       text-align: center;
     }
-
-    form {
-      display: inline-block;
-      margin: auto;
-    }
   </style>
 </head>
 <body>
-  <h1>Password Generator</h1>
+  <h1>PassGen v1</h1>
   <div class="container center">
-    <form id="password-form">
-      <label for="length">Password Length:</label><br>
-      <input type="range" id="length" name="length" min="8" max="32" value="8"><br>
-      <input type="checkbox" id="show-password" name="show-password">
-      <label for="show-password">Show Password</label><br>
-      <button class="btn" type="submit">Generate Password</button>
-    </form>
-    <br>
-    <p id="password"></p>
-    <button class="btn" id="copy-button">Copy Password</button>
+    <div class="row">
+      <div class="col s12 m6">
+        <form id="password-form" class="card">
+          <div class="card-content">
+            <span class="card-title">Password Options</span>
+            <p></p>
+            <div class="input-field">
+              <label for="length">Password Length:</label><br>
+              <input type="range" id="length" name="length" min="8" max="32" value="8" class="range-field">
+            </div>
+            
+          </div>
+          <div class="card-action">
+            <button id="submit" type="submit" class="btn">Generate Password</button>
+          </div>
+        </form>
+      </div>
+      <div class="col s12 m6">
+        <div id="password-output" class="card">
+          <div class="card-content">
+            <span class="card-title">Password</span>
+            <p id="password">*</p>
+            <button id="copy-button" class="btn">Copy Password</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <script>
     const form = document.querySelector('#password-form');
     const passwordOutput = document.querySelector('#password');
-    const showPasswordCheckbox = document.querySelector('#show-password');
+    const passwordOutputCard = document.querySelector('#password-output');
     const copyButton = document.querySelector('#copy-button');
 
     const charSets = {
@@ -58,38 +72,28 @@
       updatePasswordDisplay();
     });
 
-    showPasswordCheckbox.addEventListener('change', event => {
-      updatePasswordDisplay();
-    });
-    copyButton.addEventListener('click', event => {
-  // Create a hidden textarea element and copy the password to it
-  const textarea = document.createElement('textarea');
-  textarea.value = password;
-  textarea.setAttribute('readonly', '');
-  textarea.style.position = 'absolute';
-  textarea.style.left = '-9999px';
-  document.body.appendChild(textarea);
-
-  // Select the text in the textarea
-  textarea.select();
-
-  // Copy the selected text to the clipboard
-  document.execCommand('copy');
-
-  // Remove the textarea element
-  document.body.removeChild(textarea);
-});
 
     copyButton.addEventListener('click', event => {
+      // Create a hidden textarea element and copy the password to it
       const textarea = document.createElement('textarea');
+      textarea.value = password;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+
+      // Select the text in the textarea
+      textarea.select();
+
+      // Copy the selected text to the clipboard
+      document.execCommand('copy');
+
+      // Remove the textarea element
+      document.body.removeChild(textarea);
     });
 
     function updatePasswordDisplay() {
-      if (showPasswordCheckbox.checked) {
-        passwordOutput.textContent = password;
-      } else {
-        passwordOutput.textContent = '*'.repeat(password.length);
-      }
+      passwordOutput.textContent = password;
     }
   </script>
 </body>
